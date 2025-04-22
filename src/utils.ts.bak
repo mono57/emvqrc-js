@@ -181,70 +181,78 @@ export const NUMERIC_TO_CURRENCY_CODE: Record<string, string> =
     return acc;
   }, {} as Record<string, string>);
 
-
+/**
+ * Mapping between standard field names and EMV QR code tag IDs
+ */
 export const FIELD_TO_TAG_MAPPING: Record<string, string> = {
-  payload_format_indicator: "00",
-  initiation_method: "01",
-  merchant_category_code: "52",
-  currency: "53",
-  amount: "54",
-  country_code: "58",
-  merchant_name: "59",
-  merchant_city: "60",
-  postal_code: "61",
-  additional_data: "62",
-  merchant_information: "64",
-  tip_or_convenience_indicator: "55",
-  value_of_convenience_fee_fixed: "56",
-  value_of_convenience_fee_percentage: "57",
+  // Point of initiation method
+  "initiation_method": "01",
+  // Required merchant information
+  "merchant_category_code": "52",
+  "currency": "53",
+  "amount": "54",
+  "country_code": "58",
+  "merchant_name": "59",
+  "merchant_city": "60",
+  // Optional fields
+  "postal_code": "61",
+  "additional_data": "62",
+  "merchant_information": "64",
+  // Tip related fields
+  "tip_indicator": "55",
+  "tip_fixed_amount": "56",
+  "tip_percentage": "57",
 };
 
-export const TAG_TO_FIELD_MAPPING: Record<string, string> = Object.entries(
-  FIELD_TO_TAG_MAPPING
-).reduce((acc, [key, value]) => {
-  acc[value] = key;
-  return acc;
-}, {} as Record<string, string>);
+/**
+ * Reverse mapping for decoding
+ */
+export const TAG_TO_FIELD_MAPPING: Record<string, string> =
+  Object.entries(FIELD_TO_TAG_MAPPING).reduce((acc, [key, value]) => {
+    acc[value] = key;
+    return acc;
+  }, {} as Record<string, string>);
 
 /**
  * Converts a dictionary with standard field names to EMV QR code tag IDs
  * @param fieldData Dictionary with standard field names
  * @returns Dictionary with EMV QR code tag IDs
  */
-export function mapFieldsToTags(
-  fieldData: Record<string, string>
-): Record<string, string> {
+export function mapFieldsToTags(fieldData: Record<string, string>): Record<string, string> {
   const emvData: Record<string, string> = {};
 
+  // Set QR format indicator (always "01")
   emvData["00"] = "01";
 
-  const processedFieldData = { ...fieldData };
-
-  if ("initiation_method" in processedFieldData) {
-    const method = processedFieldData.initiation_method.toLowerCase();
+  // Handle initiation method conversion (dynamic/static)
+  if ("initiation_method" in fieldData) {
+    const method = fieldData.initiation_method.toLowerCase();
     if (method === "dynamic") {
       emvData["01"] = "11";
-      delete processedFieldData.initiation_method;
     } else if (method === "static") {
       emvData["01"] = "12";
-      delete processedFieldData.initiation_method;
+    } else {
+      // If neither dynamic nor static, pass through the value
+      emvData["01"] = fieldData.initiation_method;
     }
   }
 
-  if ("currency" in processedFieldData) {
-    let currencyValue = processedFieldData.currency;
-
+  // Handle currency conversion from alphabetic to numeric code
+  if ("currency" in fieldData) {
+    let currencyValue = fieldData.currency;
+    // Check if we have an alphabetic code that needs conversion
     if (/^[A-Za-z]+$/.test(currencyValue)) {
       currencyValue = currencyValue.toUpperCase();
       if (currencyValue in CURRENCY_CODE_MAPPING) {
-        processedFieldData.currency = CURRENCY_CODE_MAPPING[currencyValue];
+        fieldData.currency = CURRENCY_CODE_MAPPING[currencyValue];
       } else {
         throw new Error(`Unsupported currency code: ${currencyValue}`);
       }
     }
   }
 
-  for (const [field, value] of Object.entries(processedFieldData)) {
+  // Map other fields based on the mapping
+  for (const [field, value] of Object.entries(fieldData)) {
     if (field in FIELD_TO_TAG_MAPPING) {
       const tagId = FIELD_TO_TAG_MAPPING[field];
       emvData[tagId] = value;
@@ -259,11 +267,10 @@ export function mapFieldsToTags(
  * @param emvData Dictionary with EMV QR code tag IDs
  * @returns Dictionary with standard field names
  */
-export function mapTagsToFields(
-  emvData: Record<string, string>
-): Record<string, string> {
+export function mapTagsToFields(emvData: Record<string, string>): Record<string, string> {
   const fieldData: Record<string, string> = {};
 
+  // Map each EMV tag to its corresponding field name
   for (const [tag, value] of Object.entries(emvData)) {
     if (tag in TAG_TO_FIELD_MAPPING) {
       const fieldName = TAG_TO_FIELD_MAPPING[tag];
@@ -271,12 +278,11 @@ export function mapTagsToFields(
     }
   }
 
-  if (
-    "currency" in fieldData &&
-    fieldData.currency in NUMERIC_TO_CURRENCY_CODE
-  ) {
+  // Handle currency conversion from numeric to alphabetic code
+  if ("currency" in fieldData && fieldData.currency in NUMERIC_TO_CURRENCY_CODE) {
     fieldData.currency = NUMERIC_TO_CURRENCY_CODE[fieldData.currency];
   }
 
   return fieldData;
+}
 }
