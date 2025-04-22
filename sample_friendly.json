@@ -1,0 +1,9 @@
+{
+  "initiation_method": "dynamic",
+  "merchant_name": "RIEI",
+  "merchant_city": "Paris",
+  "country_code": "FR",
+  "currency": "EUR",
+  "amount": "42.00",
+  "merchant_category_code": "5812"
+}
