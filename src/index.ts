@@ -1,7 +1,7 @@
 // Export the public API
 
 export { encodeEmvQr } from "./encoder";
-export { decodeEmvQr } from "./decoder";
+export { decodeEmvQr, decodeEmvQrFriendly, decodeEmvQrRaw } from "./decoder";
 export { calculateCrc, validateCrc } from "./crc";
 
 // Export utility functions
