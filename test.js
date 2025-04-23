@@ -3,14 +3,14 @@ const { encodeEmvQr } = require('./dist');
 
 const data = {
     initiation_method: "dynamic",
-    merchant_name: "RIEI",
+    merchant_name: "AMONO AYMAR",
     merchant_code: "1234567890",
-    merchant_city: "Paris",
-    merchant_profile_picture: "id3452I5I3.jpg",
-    merchant_phone_number: "+33666666666",
-    country_code: "FR",
-    currency: "EUR",
-    amount: "42.00",
+    merchant_city: "YAOUNDE",
+    merchant_profile_picture: "0196601113ae73cba12f40b5f7674ee8",
+    merchant_phone_number: "698049742",
+    country_code: "CM",
+    currency: "XAF",
+    amount: "100000",
     merchant_category_code: "5812",
 };
 
