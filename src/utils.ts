@@ -197,6 +197,9 @@ export const FIELD_TO_TAG_MAPPING: Record<string, string> = {
   tip_or_convenience_indicator: "55",
   value_of_convenience_fee_fixed: "56",
   value_of_convenience_fee_percentage: "57",
+  merchant_code: "80",
+  merchant_profile_picture: "81",
+  merchant_phone_number: "82",
 };
 
 export const TAG_TO_FIELD_MAPPING: Record<string, string> = Object.entries(

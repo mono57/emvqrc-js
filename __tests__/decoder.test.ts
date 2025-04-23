@@ -12,20 +12,17 @@ import * as crc from "../src/crc";
 
 describe("decodeEmvQr", () => {
   test("throws error if CRC is invalid", () => {
-    // Create a valid payload first
     const basePayload =
       "00020101021229300012D156000000000510A93FO3230Q31280012D156000000010308123456786304";
     const crc = validateCrc(basePayload);
     const validPayload = basePayload + crc;
 
-    // Now tamper with the CRC
     const invalidPayload = basePayload + "FFFF";
 
     expect(() => decodeEmvQrRaw(invalidPayload)).toThrow("Invalid CRC");
   });
 
   test("decodes valid EMV QR code payload correctly", () => {
-    // Create a test payload
     const data = {
       "01": "12",
       "52": "5311",

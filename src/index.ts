@@ -7,8 +7,8 @@ export { calculateCrc, validateCrc } from "./crc";
 // Export utility functions
 export {
   toTlv,
-  mapFriendlyToEmv,
-  mapEmvToFriendly,
+  mapFieldsToTags,
+  mapTagsToFields,
   CURRENCY_CODE_MAPPING,
   NUMERIC_TO_CURRENCY_CODE,
   FIELD_TO_TAG_MAPPING,

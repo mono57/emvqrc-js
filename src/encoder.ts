@@ -41,6 +41,14 @@ function encodeEmvQrInternal(data: Record<string, string>): string {
     }
   }
 
+  // Include custom tags in range 80-89
+  for (let i = 80; i <= 89; i++) {
+    const id = i.toString();
+    if (id in data) {
+      encoded += toTlv(id, data[id]);
+    }
+  }
+
   const crcPayload = encoded + "6304";
   const crc = calculateCrc(crcPayload);
   encoded += toTlv("63", crc);
