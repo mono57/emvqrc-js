@@ -5,7 +5,7 @@
  * @returns Formatted TLV string
  */
 export function toTlv(id: string, value: string): string {
-  const length = value.length.toString().padStart(2, '0');
+  const length = value.length.toString().padStart(2, "0");
   return `${id}${length}${value}`;
 }
 

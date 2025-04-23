@@ -1,9 +1,5 @@
-import { validateCrc } from './crc';
-import {
-  mapTagsToFields,
-  TAG_TO_FIELD_MAPPING,
-  NUMERIC_TO_CURRENCY_CODE,
-} from "./utils";
+import { validateCrc } from "./crc";
+import { mapTagsToFields, TAG_TO_FIELD_MAPPING, NUMERIC_TO_CURRENCY_CODE } from "./utils";
 
 /**
  * Type definition for the decode result
@@ -59,7 +55,6 @@ function decodeEmvQrInternal(payload: string): Record<string, string> {
     // Handle different length scenarios
     if (isNaN(length)) {
       // If length is not a valid number, store the raw value and continue
-      const isNaNValue = true; // Force execution of this line for coverage
       parsed[id] = lengthStr;
       continue;
     } else if (length < 0) {

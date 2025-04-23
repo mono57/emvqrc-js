@@ -23,7 +23,7 @@ export function calculateCrc(payload: string): string {
   }
 
   // Convert to 4-character hexadecimal string
-  return crc.toString(16).toUpperCase().padStart(4, '0');
+  return crc.toString(16).toUpperCase().padStart(4, "0");
 }
 
 /**
@@ -32,7 +32,7 @@ export function calculateCrc(payload: string): string {
  * @returns Boolean indicating whether the CRC is valid
  */
 export function validateCrc(payloadWithCrc: string): boolean {
-  const crcIndex = payloadWithCrc.lastIndexOf('6304');
+  const crcIndex = payloadWithCrc.lastIndexOf("6304");
   if (crcIndex === -1) {
     return false;
   }
